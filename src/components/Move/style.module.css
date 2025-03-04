@@ -1,0 +1,29 @@
+.move {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.move a {
+    text-decoration: none;
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.move a:visited{
+    color: inherit;
+}
+
+.move .back {
+    font-size: 50px;
+    font-weight: 700;
+    font-family: var(--blinker-font);
+}
+
+.remove {
+    width: 46px;
+}

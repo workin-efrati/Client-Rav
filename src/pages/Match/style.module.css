@@ -1,0 +1,73 @@
+.shut {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #E2E2E2CC;
+}
+
+.zoom {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: end;
+    position: absolute;
+    left: 30px;
+}
+
+.zoom button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.loading {
+    height: 100vh;
+}
+
+.saveAllFuq {
+    background: linear-gradient(74.22deg, rgba(0, 60, 102, 0.9) -5.24%, rgba(0, 90, 153, 0.9) 36.41%, rgba(0, 119, 204, 0.9) 107.25%);
+    color: #FFFFFF;
+    width: 100px;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: center;
+}
+
+.line {
+    height: 2px;
+    background: linear-gradient(90deg, rgba(6, 119, 221, 0.8) 0%, rgba(4, 81, 151, 0.8) 43%, rgba(3, 64, 119, 0.8) 100%);
+    box-shadow: 0px 2px 4px 0px #00000026;
+}
+
+.menu {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu a {
+    text-decoration: none;
+    font-size: 14px;
+    /* border: 1px solid conic-gradient(from 270deg at 50% 50%, #003C66 0deg, #0077CC 252deg, #003C66 360deg); */
+}
+
+.menu .move_button {
+    display: flex;
+    gap: 0.3rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid;
+    /* border-image-source: conic-gradient(from 270deg at 50% 50%, #003C66 0deg, #0077CC 252deg, #003C66 360deg); */
+    width: 110px;
+    padding: 5px;
+}
+
+.menu .exit_button {
+    font-size: 26px;
+    justify-self: center;
+}

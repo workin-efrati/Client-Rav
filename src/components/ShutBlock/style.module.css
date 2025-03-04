@@ -1,0 +1,49 @@
+.shut_block {
+    padding: 0.5rem;
+    box-shadow: 0px 2px 10px 0px #00000040;
+    border-radius: 5px;
+}
+
+.block {
+    background-color: inherit;
+    padding: 0.25rem 0.5rem;
+    /* position: absolute; */
+    border-radius: 5px;
+}
+
+.question {
+    background-color: #FFFFFF;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h4 {
+    font-weight: 600;
+}
+
+.header svg {
+    font-size: 17px;
+}
+
+textarea {
+    background-color: inherit;
+    font-size: 15px;
+    border-radius: 5px;
+    height: 100%;
+}
+
+.q_content {
+    font-size: 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0.5rem;
+}

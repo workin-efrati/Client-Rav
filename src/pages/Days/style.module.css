@@ -1,0 +1,16 @@
+.all {
+    background-color: #E2E2E2CC;
+    padding-top: 20px;
+    height: 100vh;
+}
+
+.days {
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: -1;
+    gap: 1rem;
+    padding: 1rem;
+    direction: rtl;
+    justify-content: baseline;
+    background-color: #E2E2E2CC;
+}

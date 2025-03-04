@@ -1,0 +1,33 @@
+.sort {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: right;
+    padding: 1.3rem;
+    color: #314F71;
+}
+
+button {
+    border: none;
+    font-size: 22px;
+    background-color: inherit;
+}
+
+.buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.buttons button {
+    width: 65px;
+    height: 28px;
+    border-radius: 15px;
+    background-color: #FFFFFF57;
+    border: 0.5px solid;
+    font-size: 14px;
+}
+
+.buttons .active {
+    background-color: #314F71;
+    color: #FFFFFF75;
+}

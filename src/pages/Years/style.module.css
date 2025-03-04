@@ -1,0 +1,9 @@
+.years {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    align-items: center;
+    background-color: #E2E2E2CC;
+    height: 100vh;
+}

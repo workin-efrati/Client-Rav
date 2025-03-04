@@ -1,0 +1,110 @@
+.block {
+    box-shadow: 0px 2px 10px 0px #00000040;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.block p {
+    font-size: 13px;
+    padding: 10px;
+}
+
+.block .side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: end;
+    gap: 0.5rem;
+}
+
+.percent {
+    border-radius: 10px 5px 10px 5px;
+    width: 50px;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 5px;
+}
+
+.block button {
+    font-size: 16px;
+    padding: 2px 5px;
+}
+
+.green {
+    background-color: #029A32A6;
+}
+
+.yellow {
+    background-color: #9A9002A6;
+}
+
+.brown {
+    background-color: #9A6302A6;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: #dcdcdc;
+    box-shadow: 0px 2px 10px 0px #00000040;
+    border-radius: 10px;
+    font-size: 13px;
+    position: absolute;
+    bottom: -63px;
+    z-index: 1;
+}
+
+.menu button {
+    font-size: 13px;
+    padding: 0;
+}
+
+.menu a {
+    text-decoration: none;
+}
+
+.close {
+    display: none;
+}
+
+textarea {
+    width: 100%;
+    padding: 5px;
+    /* height: 100px; */
+}
+
+.delete {
+    display: none;
+}
+
+.active {
+    border: 5px solid;
+    /* border-image-source: conic-gradient(from 180deg at 50% 50%, #003C66 0deg, #0077CC 252deg, #003C66 360deg); */
+}
+
+.choosen {
+    border: 5px solid;
+}
+
+.side .cancel {
+    font-size: 30px;
+    height: 30px;
+}
+
+.side .ok {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #314F71;
+    font-size: 30px;
+}
+
+.side .ok path {
+    color: #FFFFFF;
+}

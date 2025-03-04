@@ -1,0 +1,41 @@
+.one {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.title h3 {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 24px;
+    font-family: "Heebo", sans-serif;
+}
+
+.edit {
+    font-size: 16px;
+    align-self: flex-end;
+    padding-left: 10px;
+}
+
+textarea {
+    resize: none;
+}
+
+.line {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(6, 119, 221, 0.8) 0%, rgba(4, 81, 151, 0.8) 43%, rgba(3, 64, 119, 0.8) 100%);
+    box-shadow: 0px 2px 4px 0px #00000026;
+}
+
+
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
