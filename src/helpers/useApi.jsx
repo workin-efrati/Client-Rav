@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { api } from "./api"
 
-function useApi({url, method = 'GET', params = {}, headers = {}}) {
+function useApi({url, method = 'GET', params = {}, headers = {}, body={}}) {
     
-    const request = { url, method, headers, params }
+    const request = { url, method, headers, params, body }
     
     const [data, setData] = useState()
     const href = window.location.href;

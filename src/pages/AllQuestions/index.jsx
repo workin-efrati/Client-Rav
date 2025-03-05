@@ -5,6 +5,7 @@ import useApi from '../../helpers/useApi';
 
 import ShutBlock from '../../components/ShutBlock';
 import QABlock from '../../components/QABlock';
+import { useEffect, useState } from 'react';
 
 function AllQuestions() {
 
@@ -12,7 +13,24 @@ function AllQuestions() {
     const { month } = useParams();
     const { day } = useParams();
 
-    let data = useApi({ url: 'msg', params: { date: `${year}-${month}-${day}`} })    
+    const [data, setData] = useState([])
+    // useEffect(() => {
+    //     let d = useApi({ url: 'msg', params: { date: `${year}-${month}-${day}` } })
+    //     setData(d)
+
+    // }, [])
+
+    let apiData = useApi({ url: 'msg', params: { date: `${year}-${month}-${day}` } })
+    if(data !== apiData) setData(apiData)
+
+
+    // useEffect(() => {
+    //     console.log("prevData:", data);
+    //     console.log("API Data updated:", apiData);
+    //     setData(apiData);  // עדכון הסטייט בכל פעם שהנתונים משתנים
+    //     console.log("prevData 2:", data);
+    // }, [apiData]);
+
 
     return <div className={style.all}>
         <Move date={`${day}.${month}.${year}`} />

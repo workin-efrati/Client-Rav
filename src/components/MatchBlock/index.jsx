@@ -33,9 +33,6 @@ function MatchBlock({ i, question, setQuestion, answers, fontSize, id, fuq }) {
             {answers.map(a =>
                 <AnswerBlock content={a.message} percent={a._id} setActive={setActive} active={active} choosen={false} />
             )}
-            {/* <AnswerBlock content={' אשכנזים נהגו לעלות כמנהג המובא ברמ"א. ספרדים חלקם נהגו וחלקם לא נהגו. אפשר לבחור, משום שאין איסור. ובלבד שזה לא יהיה טיול, אלא עליה של כובד ראש. '} percent={90} setActive={setActive} active={active} choosen={true} />
-                <AnswerBlock content={'ספרדים- אין להתיר במקרה זה.'} percent={70} setActive={setActive} active={active} />
-                <AnswerBlock content={' לאשכנזים מעיקר הדין מותר, וראוי להמנע'} percent={60} setActive={setActive} active={active} /> */}
         </div>
         <div className={style.line} />
     </div>

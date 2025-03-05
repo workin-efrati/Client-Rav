@@ -19,8 +19,10 @@ function QABlock({ data, type, to }) {
         setIsEditMode(!isEditMode)
     }
 
-    const handleClickApi = (method, params) => {
-        api({ url: `msg/${_id}`, method, params })
+    const handleClickApi = (method, body) => {
+        // console.log('body ', body);
+        
+        api({ url: `msg/${_id}`, method, body })
             .then((res) => setContent(res.message))
     }
 

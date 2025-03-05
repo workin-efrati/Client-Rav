@@ -8,7 +8,7 @@ import { ImCheckmark } from "react-icons/im";
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-function AnswerBlock({ content, percent, setActive, active, choosen }) {
+function AnswerBlock({ content, setActive, active, choosen }) {
 
     // const { year } = useParams();
     // const { month } = useParams();
@@ -23,11 +23,6 @@ function AnswerBlock({ content, percent, setActive, active, choosen }) {
         setIsEditMode(!isEditMode)
     }
 
-    let colorOfPercent = 'brown';
-    if (percent >= 70 && percent < 90) colorOfPercent = 'yellow';
-    else if (percent >= 90) colorOfPercent = 'green';
-
-
     return <div className={`${ansValue === '' ? style.delete : style.block} ${active === percent ? style.active : style.block} ${choosen ? style.choosen : style.block}`}>
         {isEditMode ?
             <textarea value={ansValue} onChange={e => setAnsValue(e.target.value)} />
@@ -41,7 +36,6 @@ function AnswerBlock({ content, percent, setActive, active, choosen }) {
                 </>
                 :
                 <>
-                    {/* <div className={`${style.percent} ${style[colorOfPercent]}`}>{percent}%</div> */}
                     {isEditMode ?
                         <button onClick={() => setIsEditMode(!isEditMode)}><MdSave /></button>
                         :
