@@ -1,7 +1,7 @@
 import { IoMdClose } from 'react-icons/io';
 import style from './style.module.css'
 import { SlOptionsVertical } from 'react-icons/sl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../helpers/api';
 import { MdSave } from 'react-icons/md';
@@ -15,19 +15,17 @@ function QABlock({ data, type, to }) {
     const [content, setContent] = useState(message)
 
     const handleClick = () => {
-        setIsMenuOpen(!isMenuOpen)
         setIsEditMode(!isEditMode)
     }
 
     const handleClickApi = (method, body) => {
-        // console.log('body ', body);
-        
         api({ url: `msg/${_id}`, method, body })
             .then((res) => setContent(res.message))
+        setIsMenuOpen(!isMenuOpen)
     }
 
-    return <div className={style.block}>
-        {message?.length ?
+    return <div className={content ? style.block : style.close}>
+        {content?.length ?
             <>
                 {isEditMode ?
                     <textarea value={content} onChange={e => setContent(e.target.value)} />

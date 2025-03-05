@@ -7,12 +7,11 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { ImCheckmark } from "react-icons/im";
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { api } from '../../helpers/api';
 
-function AnswerBlock({ content, setActive, active, choosen }) {
+function AnswerBlock({ content, _id, setActive, active }) {
 
-    // const { year } = useParams();
-    // const { month } = useParams();
-    // const { day } = useParams();
+    const { id } = useParams()
 
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
@@ -23,16 +22,22 @@ function AnswerBlock({ content, setActive, active, choosen }) {
         setIsEditMode(!isEditMode)
     }
 
-    return <div className={`${ansValue === '' ? style.delete : style.block} ${active === percent ? style.active : style.block} ${choosen ? style.choosen : style.block}`}>
+    const handleClickApi = (method, body) => {
+        api({ url: `msg/${_id}`, method, body })
+            .then((res) => setAnsValue(res.message))
+        setIsMenuOpen(!isMenuOpen)
+    }
+
+    return <div className={`${ansValue === '' ? style.delete : style.block} ${active === _id ? style.active : style.block}`}>
         {isEditMode ?
             <textarea value={ansValue} onChange={e => setAnsValue(e.target.value)} />
             :
-            <p onClick={() => setActive(percent)}>{ansValue}</p>}
+            <p onClick={() => setActive(_id)}>{ansValue}</p>}
         <div className={style.side}>
-            {active === percent ?
+            {active === _id ?
                 <>
                     <button className={style.cancel} onClick={() => { setActive() }}><IoIosCloseCircle /></button>
-                    <button className={style.ok} onClick={() => setActive()}><ImCheckmark /></button>
+                    <button className={style.ok} onClick={() => { setActive(); api({ url: 'msg', method: 'post', body: { qId: id, aId: _id } }).then() }}><ImCheckmark /></button>
                 </>
                 :
                 <>
@@ -43,9 +48,7 @@ function AnswerBlock({ content, setActive, active, choosen }) {
                             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
                             <div className={`${style.menu} ${isMenuOpen ? style.open : style.close}`}>
                                 <button onClick={handleClick}>ערוך תשובה</button>
-                                <button onClick={() => { setAnsValue(''); setIsMenuOpen(!isMenuOpen) }}>מחק תשובה</button>
-                                {/* <Link key={'prevDay'} to={`/${year}/${month}/${day - 1}`}>העבר ליום הקודם</Link>
-                                <Link key={'nextDay'} to={`/${year}/${month}/${Number(day) + 1}`}>העבר ליום הבא</Link> */}
+                                <button onClick={() => { handleClickApi('delete'); setAnsValue(''); setIsMenuOpen(!isMenuOpen) }}>מחק תשובה</button>
                             </div>
                         </>}
                 </>}
