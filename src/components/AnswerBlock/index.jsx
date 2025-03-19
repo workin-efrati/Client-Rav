@@ -1,59 +1,84 @@
-import style from './style.module.css'
-
-import { SlOptionsVertical } from "react-icons/sl";
-import { IoMdClose } from "react-icons/io";
-import { MdSave } from "react-icons/md";
-import { IoIosCloseCircle } from "react-icons/io";
-import { ImCheckmark } from "react-icons/im";
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { SlOptionsVertical } from "react-icons/sl";
+import { IoMdClose, IoIosCloseCircle } from "react-icons/io";
+import { MdSave } from "react-icons/md";
+import { ImCheckmark } from "react-icons/im";
 import { api } from '../../helpers/api';
+import style from './style.module.css';
 
 function AnswerBlock({ content, _id, setActive, active }) {
+    const { id } = useParams();
+    const { year,month,day } = useParams();
+    const nav = useNavigate()
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [ansValue, setAnsValue] = useState(content);
 
-    const { id } = useParams()
+    const toggleEditMode = () => setIsEditMode(prev => !prev);
+    const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isEditMode, setIsEditMode] = useState(false)
-    const [ansValue, setAnsValue] = useState(content)
+    const handleSave = async () => {
+        if (isEditMode) {
+                const res = await api({ url: `msg/${_id}`, method: 'put', body: { message: ansValue } });
+                setAnsValue(res.message);
+        }
+        toggleEditMode();
+        toggleMenu()
+    };
 
-    const handleClick = () => {
-        setIsMenuOpen(!isMenuOpen)
-        setIsEditMode(!isEditMode)
+    const handleSaveQA = async () => {
+        api({ url: `msg`, method:'post', body : { qId: id, aId: _id } })
+        .then(_=>nav(`/${year}/${month}/${day}`))
     }
 
-    const handleClickApi = (method, body) => {
-        api({ url: `msg/${_id}`, method, body })
-            .then((res) => setAnsValue(res.message))
-        setIsMenuOpen(!isMenuOpen)
-    }
+    const handleDelete = async (method, body = {}) => {
+        try {
+            const res = await api({ url: `msg/${_id}`, method, body });
+            if (method === 'delete') setAnsValue('');
+            else setAnsValue(res.message);
+        } catch (error) {
+            console.error("API request failed:", error);
+        }
+        toggleMenu();
+    };
 
-    return <div className={`${ansValue === '' ? style.delete : style.block} ${active === _id ? style.active : style.block}`}>
-        {isEditMode ?
-            <textarea value={ansValue} onChange={e => setAnsValue(e.target.value)} />
-            :
-            <p onClick={() => setActive(_id)}>{ansValue}</p>}
-        <div className={style.side}>
-            {active === _id ?
-                <>
-                    <button className={style.cancel} onClick={() => { setActive() }}><IoIosCloseCircle /></button>
-                    <button className={style.ok} onClick={() => { setActive(); api({ url: 'msg', method: 'post', body: { qId: id, aId: _id } }).then() }}><ImCheckmark /></button>
-                </>
-                :
-                <>
-                    {isEditMode ?
-                        <button onClick={() => setIsEditMode(!isEditMode)}><MdSave /></button>
-                        :
+    return (
+        <div className={`${!ansValue ? style.delete : style.block} ${active === _id ? style.active : ''}`}>
+            {isEditMode ? (
+                <textarea value={ansValue} onChange={e => setAnsValue(e.target.value)} />
+            ) : (
+                <p onClick={() => setActive(_id)}>{ansValue}</p>
+            )}
+
+            <div className={style.side}>
+                {active === _id ? (
+                    <>
+                        <button className={style.cancel} onClick={() => setActive(null)}>
+                            <IoIosCloseCircle />
+                        </button>
+                        <button className={style.ok} onClick={handleSaveQA}>
+                            <ImCheckmark />
+                        </button>
+                    </>
+                ) : (
+                    isEditMode ? (
+                        <button onClick={handleSave}><MdSave /></button>
+                    ) : (
                         <>
-                            <button onClick={() => setIsMenuOpen(!isMenuOpen)}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
-                            <div className={`${style.menu} ${isMenuOpen ? style.open : style.close}`}>
-                                <button onClick={handleClick}>ערוך תשובה</button>
-                                <button onClick={() => { handleClickApi('delete'); setAnsValue(''); setIsMenuOpen(!isMenuOpen) }}>מחק תשובה</button>
-                            </div>
-                        </>}
-                </>}
+                            <button onClick={toggleMenu}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
+                            {isMenuOpen && (
+                                <div className={style.menu}>
+                                    <button onClick={toggleEditMode}>ערוך תשובה</button>
+                                    <button onClick={() => handleApiCall('delete')}>מחק תשובה</button>
+                                </div>
+                            )}
+                        </>
+                    )
+                )}
+            </div>
         </div>
-    </div>
+    );
 }
 
-export default AnswerBlock
+export default AnswerBlock;

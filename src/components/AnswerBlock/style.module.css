@@ -108,3 +108,7 @@ textarea {
 .side .ok path {
     color: #FFFFFF;
 }
+
+.side button {
+    font-size: 25px;
+}

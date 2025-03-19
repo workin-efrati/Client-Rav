@@ -39,7 +39,7 @@ function Days() {
           :
 
           days.map(d => numOfMsgs[d].total !== 0 ?
-            <DateBlock date={`${d}.${month}.${year}`} part={numOfMsgs[d].part} total={numOfMsgs[d].total} to={`/${year}/${month}/${d}`} />
+            <DateBlock key={d} date={`${d}.${month}.${year}`} part={numOfMsgs[d].part} total={numOfMsgs[d].total} to={`/${year}/${month}/${d}`} />
             : console.log(numOfMsgs[d])) /// change it!!
             .sort(sortFunc)
 

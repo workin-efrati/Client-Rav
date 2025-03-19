@@ -63,8 +63,11 @@
     border-radius: 20px;
     border: 1px solid;
     /* border-image-source: conic-gradient(from 270deg at 50% 50%, #003C66 0deg, #0077CC 252deg, #003C66 360deg); */
-    width: 110px;
+    width: 150px;
     padding: 5px;
+}
+.menu .move_button div{
+    font-size: 14px;
 }
 
 .menu .exit_button {

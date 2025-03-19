@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import style from './style.module.css'
 
 import { MdZoomIn } from "react-icons/md";
@@ -6,25 +6,41 @@ import { MdZoomOut } from "react-icons/md";
 import { TbDoorExit } from "react-icons/tb";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useApi from '../../helpers/useApi';
 import MatchBlock from '../../components/MatchBlock';
+import { api } from '../../helpers/api';
 
 function Match() {
 
-    const { year } = useParams();
-    const { month } = useParams();
-    const { day } = useParams();
+    const nav = useNavigate();
+    const { year,month,day } = useParams();
+    const [fullMsgs, setFullMsgs] = useState([])
+    const [fontSize, setFontSize] = useState(18)
+    
     const { id } = useParams();
 
-    const [fontSize, setFontSize] = useState(18)
 
-    const fullMsgs = useApi({ url: `msg/${id}`, method: 'get' })
+
 
     const [question, setQuestion] = useState('')
     const fuq = fullMsgs?.at(0)?.isFuq ? true : false;
-    console.log('full ', fullMsgs);
+    
+    console.log('fullMsgs', fullMsgs);
 
+    useEffect(() => {
+        api({ url: `msg/${id}`, method: 'get' })
+            .then(res => setFullMsgs(prev => [...res]))
+    }, [id])
+
+    useEffect(() => {
+        console.log('Updated fullMsgs:', fullMsgs);
+    }, [fullMsgs]);
+
+    const handleNav = (isNext = true) => {
+        api({ url: `msg/${id}/nav`, method: 'get', params: { nav: isNext } })
+            .then((res) => nav(`/${year}/${month}/${day}/${res}`))
+    }
 
     if (question == '') setQuestion(fullMsgs?.at(0)?.message)
     return <div className={style.shut}>
@@ -36,7 +52,7 @@ function Match() {
             fuq ?
                 <>
                     {splitBySender(fullMsgs).map((a, i) =>
-                        <MatchBlock i={i} question={a[0].message} setQuestion={setQuestion} answers={a.slice(1)} fontSize={fontSize} id={id} fuq={fuq} />)}
+                        <MatchBlock key={i} i={i} question={a[0].message} setQuestion={setQuestion} answers={a.slice(1)} fontSize={fontSize} id={id} fuq={fuq} />)}
                     <button className={style.saveAllFuq}>שמירה</button>
                 </>
                 :
@@ -49,10 +65,10 @@ function Match() {
                 <IoIosArrowForward />
                 <div>שאלה קודמת</div>
             </Link>
-            <Link className={style.move_button} key={'next'} to={`/${year}/${month}/${day}/${id + 1}`}>
+            <button className={style.move_button} key={'next'} onClick={() => handleNav(true)}>
                 <div>שאלה הבאה</div>
                 <IoIosArrowBack />
-            </Link>
+            </button>
             <Link className={style.exit_button} key={'exit'} to={`/${year}/${month}/${day}`}><TbDoorExit /></Link>
         </div>
     </div>

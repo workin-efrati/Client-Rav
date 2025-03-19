@@ -10,13 +10,23 @@ function MatchBlock({ i, question, setQuestion, answers, fontSize, id, fuq }) {
     const [isEditMode, setIsEditMode] = useState(false)
     const [active, setActive] = useState()
     const [content, setContent] = useState(question)
+    const [time, setTime] = useState(1)
+    const [answersLocal, setAnswersLocal] = useState(answers)
 
     const handleClick = () => {
         if (isEditMode) {
             api({ url: `msg/${id}`, method: 'put', body: { message: content } })
-            .then((res) => setQuestion(res.message))
+                .then((res) => setQuestion(res.message))
         }
         setIsEditMode(!isEditMode)
+    }
+
+    const handleShowMore = () => {
+        api({ url: `msg/${id}`, method: 'get', params: { time: time + 1 } })
+            .then((res) => {
+                setAnswersLocal(res.slice(1))
+                setTime(time + 1)
+            })
     }
 
     return <div className={style.one}>
@@ -32,10 +42,10 @@ function MatchBlock({ i, question, setQuestion, answers, fontSize, id, fuq }) {
         </div>
         {!fuq || (fuq && i == 0) ? <div className={style.line}></div> : ''}
         <div className={style.answers}>
-            {answers.map(a =>
+            {answersLocal.map(a =>
                 <AnswerBlock key={a._id} content={a.message} _id={a._id} setActive={setActive} active={active} />
             )}
-            <button className={style.load} onClick={api({ url: `msg/${id}`, method: 'get', params: { time: 1 } })}>טען עוד</button>
+            <button className={style.load} onClick={handleShowMore}>טען עוד</button>
         </div>
         <div className={style.line} />
     </div>
