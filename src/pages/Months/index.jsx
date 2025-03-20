@@ -49,7 +49,7 @@ function Months() {
     <div className={style.months}>
       {loading && 'טוען...'}
       {error && 'שגיאה בטעינת הדף'}
-      {data && sortedData.length > 0 ? sortedData : 'אין נתונים להצגה'}
+      {data && (sortedData.length > 0 ? sortedData : 'אין נתונים להצגה')}
     </div>
   </div>
 }

@@ -5,6 +5,7 @@ import { MdSave } from 'react-icons/md'
 import { SlPencil } from 'react-icons/sl'
 import AnswerBlock from '../AnswerBlock';
 import useApi from '../../helpers/useApi'
+import dates from '../../helpers/dates'
 
 function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast }) {
 
@@ -46,6 +47,7 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast }) {
                 <p className={style.q_content} style={{ fontSize: fontSize }}>{content}</p>}
 
             <button className={style.edit} onClick={handleClick}>{isEditMode ? <MdSave /> : <SlPencil />}</button>
+            <div>{i == 0 && dates.formatDate(data[0].date)}</div>
         </div>
 
         {!isFuq || (isFuq && i == 0) ? <div className={style.line}></div> : ''}
