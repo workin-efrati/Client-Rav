@@ -11,4 +11,6 @@
     gap: 1rem;
     padding: 1rem;
     justify-content: baseline;
+    /* direction: rtl;
+    background-color: #E2E2E2CC; */
 }

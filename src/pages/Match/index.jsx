@@ -52,7 +52,7 @@ function Match() {
                 fuq ? (
                     <>
                         {splitBySender(data)
-                            .map((group, i) => (
+                            .map((group, i, arr) => (
                                 <MatchBlock
                                     key={i}
                                     i={i}
@@ -63,17 +63,19 @@ function Match() {
                                     fontSize={fontSize}
                                     id={id}
                                     isFuq={fuq}
+                                    isLast={i === arr.length - 1}
                                 />
                             ))}
                     </>
                 ) : (
                     <MatchBlock
                         i={0}
-                        data={data}
+                        data={orderData(data)}
                         fontSize={fontSize}
                         id={id}
                         isFuq={fuq}
                         handleNav={handleNav}
+                        isLast={true}
                     />
                 )
             ) : (
@@ -115,6 +117,19 @@ function splitBySender(arr) {
         }
     }
     return result
+}
+
+function orderData(arr) {
+    var helpArr = [];
+    let question;
+    for(let a of arr){
+        if(!a.isQuestion){
+            helpArr.push(a)
+        }
+        else question = a
+    }
+    helpArr.unshift(question)
+    return helpArr
 }
 
 // function splitBySender(arr = []) {

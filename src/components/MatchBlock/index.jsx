@@ -6,7 +6,7 @@ import { SlPencil } from 'react-icons/sl'
 import AnswerBlock from '../AnswerBlock';
 import useApi from '../../helpers/useApi'
 
-function MatchBlock({ i, data, fontSize, id, isFuq, handleNav }) {
+function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast }) {
 
 
     const [isEditMode, setIsEditMode] = useState(false)
@@ -57,7 +57,7 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav }) {
         </div>
         <div className={style.load}>
             <div className={style.line} />
-            <button onClick={handleShowMore}>טען עוד</button>
+            {isLast ? <button onClick={handleShowMore}>טען עוד</button> : ''}
         </div>
     </div>
 }
