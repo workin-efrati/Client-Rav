@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoMdClose, IoIosCloseCircle } from "react-icons/io";
 import { MdSave } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
 import { api } from '../../helpers/api';
 import style from './style.module.css';
+import useApi from '../../helpers/useApi';
 
-function AnswerBlock({ content, _id, setActive, active }) {
+function AnswerBlock({ content, _id, setActive, active, handleNav, setAnswers }) {
     const { id } = useParams();
-    const { year,month,day } = useParams();
-    const nav = useNavigate()
+    const { post, put, del } = useApi();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [ansValue, setAnsValue] = useState(content);
@@ -18,29 +18,24 @@ function AnswerBlock({ content, _id, setActive, active }) {
     const toggleEditMode = () => setIsEditMode(prev => !prev);
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-    const handleSave = async () => {
+    const handleSave = () => {
         if (isEditMode) {
-                const res = await api({ url: `msg/${_id}`, method: 'put', body: { message: ansValue } });
-                setAnsValue(res.message);
+            put(`msg/${_id}`, { body: { message: ansValue } })
+                .then(res => setAnsValue(res.message));
         }
         toggleEditMode();
         toggleMenu()
     };
 
-    const handleSaveQA = async () => {
-        api({ url: `msg`, method:'post', body : { qId: id, aId: _id } })
-        .then(_=>nav(`/${year}/${month}/${day}`))
+    const handleSaveQA = () => {
+        post(`msg`, { body: { qId: id, aId: _id } })
+            .then(_ => handleNav(1))
     }
 
-    const handleDelete = async (method, body = {}) => {
-        try {
-            const res = await api({ url: `msg/${_id}`, method, body });
-            if (method === 'delete') setAnsValue('');
-            else setAnsValue(res.message);
-        } catch (error) {
-            console.error("API request failed:", error);
-        }
-        toggleMenu();
+    const handleDelete = () => {
+        del(`msg/${_id}`, { enableLogging: true })
+            .then(_ => setAnswers(prev => prev.filter(p=>p._id != _id)))
+        toggleEditMode();
     };
 
     return (
@@ -70,7 +65,7 @@ function AnswerBlock({ content, _id, setActive, active }) {
                             {isMenuOpen && (
                                 <div className={style.menu}>
                                     <button onClick={toggleEditMode}>ערוך תשובה</button>
-                                    <button onClick={() => handleApiCall('delete')}>מחק תשובה</button>
+                                    <button onClick={handleDelete}>מחק תשובה</button>
                                 </div>
                             )}
                         </>

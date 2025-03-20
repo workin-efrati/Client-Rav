@@ -39,3 +39,11 @@ textarea {
     flex-direction: column;
     gap: 1.5rem;
 }
+
+.load {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 70px;
+}

@@ -1,80 +1,106 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import style from './style.module.css'
-
-import { MdZoomIn } from "react-icons/md";
-import { MdZoomOut } from "react-icons/md";
-import { TbDoorExit } from "react-icons/tb";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
 import { useEffect, useState } from 'react';
+import { MdZoomIn, MdZoomOut } from "react-icons/md";
+import { TbDoorExit } from "react-icons/tb";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import useApi from '../../helpers/useApi';
 import MatchBlock from '../../components/MatchBlock';
-import { api } from '../../helpers/api';
+import style from './style.module.css';
 
 function Match() {
-
     const nav = useNavigate();
-    const { year,month,day } = useParams();
-    const [fullMsgs, setFullMsgs] = useState([])
-    const [fontSize, setFontSize] = useState(18)
-    
-    const { id } = useParams();
+    const { year, month, day, id } = useParams();
 
+    const [fontSize, setFontSize] = useState(18);
+    const [question, setQuestion] = useState('');
 
-
-
-    const [question, setQuestion] = useState('')
-    const fuq = fullMsgs?.at(0)?.isFuq ? true : false;
-    
-    console.log('fullMsgs', fullMsgs);
+    const { loading, clear, data, get } = useApi();
 
     useEffect(() => {
-        api({ url: `msg/${id}`, method: 'get' })
-            .then(res => setFullMsgs(prev => [...res]))
-    }, [id])
-
-    useEffect(() => {
-        console.log('Updated fullMsgs:', fullMsgs);
-    }, [fullMsgs]);
-
-    const handleNav = (isNext = true) => {
-        api({ url: `msg/${id}/nav`, method: 'get', params: { nav: isNext } })
-            .then((res) => nav(`/${year}/${month}/${day}/${res}`))
-    }
-
-    if (question == '') setQuestion(fullMsgs?.at(0)?.message)
-    return <div className={style.shut}>
-        <div className={style.zoom}>
-            <button onClick={() => setFontSize(fontSize + 2)}><MdZoomIn /></button>
-            <button onClick={() => setFontSize(fontSize - 2)}><MdZoomOut /></button>
-        </div>
-        {fullMsgs?.length ?
-            fuq ?
-                <>
-                    {splitBySender(fullMsgs).map((a, i) =>
-                        <MatchBlock key={i} i={i} question={a[0].message} setQuestion={setQuestion} answers={a.slice(1)} fontSize={fontSize} id={id} fuq={fuq} />)}
-                    <button className={style.saveAllFuq}>שמירה</button>
-                </>
-                :
-                <MatchBlock i={0} question={fullMsgs?.at(0)?.message} setQuestion={setQuestion} answers={fullMsgs.slice(1)} fontSize={fontSize} id={id} fuq={fuq} />
-            :
-            <div className={style.loading}>טוען...</div>
+        if (id) {
+            get(`msg/${id}`, { params: { enableLogging: true } });
         }
-        <div className={style.menu}>
-            <Link className={style.move_button} key={'prev'} to={`/${year}/${month}/${day}/${id - 1}`}>
-                <IoIosArrowForward />
-                <div>שאלה קודמת</div>
-            </Link>
-            <button className={style.move_button} key={'next'} onClick={() => handleNav(true)}>
-                <div>שאלה הבאה</div>
-                <IoIosArrowBack />
-            </button>
-            <Link className={style.exit_button} key={'exit'} to={`/${year}/${month}/${day}`}><TbDoorExit /></Link>
+    }, [id]);
+
+    useEffect(() => {
+        if (data && data.length > 0) {
+            setQuestion(data[0].message || '');
+        }
+    }, [data]);
+
+    const fuq = !!(data && data[0]?.isFuq);
+
+    const handleNav = (isNext) => {
+        get(`msg/${id}/nav`, { params: { nav: isNext, enableLogging: true } })
+            .then(res => {
+                nav(`/${year}/${month}/${day}/${res}`)
+                clear()
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+    };
+
+    return (
+        <div className={style.shut}>
+            <div className={style.zoom}>
+                <button onClick={() => setFontSize((prev) => prev + 2)}><MdZoomIn /></button>
+                <button onClick={() => setFontSize((prev) => prev - 2)}><MdZoomOut /></button>
+            </div>
+
+            {loading && <div className={style.loading}>טוען...</div>}
+
+            {data && data.length ? (
+                fuq ? (
+                    <>
+                        {splitBySender(data)
+                            .map((group, i) => (
+                                <MatchBlock
+                                    key={i}
+                                    i={i}
+                                    data={group}
+                                    question={group[0].message}
+                                    setQuestion={setQuestion}
+                                    answers={group?.slice(1) || []}
+                                    fontSize={fontSize}
+                                    id={id}
+                                    isFuq={fuq}
+                                />
+                            ))}
+                    </>
+                ) : (
+                    <MatchBlock
+                        i={0}
+                        data={data}
+                        fontSize={fontSize}
+                        id={id}
+                        isFuq={fuq}
+                        handleNav={handleNav}
+                    />
+                )
+            ) : (
+                <div className={style.loading}>אין נתונים</div>
+            )}
+            {fuq &&<div style={{marginBottom:'80px'}}/>}
+            <div className={style.menu}>
+                {fuq && <button className={style.saveAllFuq}>שמירה</button>}
+                <div className={style.nav}>
+                    <button className={style.move_button} onClick={() => handleNav(0)}>
+                        <IoIosArrowForward />
+                        <div>שאלה קודמת</div>
+                    </button>
+                    <button className={style.move_button} onClick={() => handleNav(1)}>
+                        <div>שאלה הבאה</div>
+                        <IoIosArrowBack />
+                    </button>
+                    <Link className={style.exit_button} to={`/${year}/${month}/${day}`}>
+                        <TbDoorExit />
+                    </Link>
+                </div>
+            </div>
         </div>
-    </div>
+    );
 }
 
-export default Match
+export default Match;
 
 function splitBySender(arr) {
     var helpArr = [];
@@ -90,3 +116,14 @@ function splitBySender(arr) {
     }
     return result
 }
+
+// function splitBySender(arr = []) {
+//     return arr.reduce((acc, msg) => {
+//         if (!acc.length || acc[acc.length - 1][0].sender !== msg.sender) {
+//             acc.push([msg]);
+//         } else {
+//             acc[acc.length - 1].push(msg);
+//         }
+//         return acc;
+//     }, []);
+// }
