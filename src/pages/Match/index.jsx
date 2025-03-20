@@ -13,8 +13,9 @@ function Match() {
 
     const [fontSize, setFontSize] = useState(18);
     const [question, setQuestion] = useState('');
+    const [resultObj, setResultObj] = useState([]);
 
-    const { loading, clear, data, get } = useApi();
+    const { loading, clear, data, get, post } = useApi();
 
     useEffect(() => {
         if (id) {
@@ -38,6 +39,11 @@ function Match() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
     };
+
+    const handleSaveQA = () => {
+        post(`msg`, { body: { qId: id, aId: resultObj[0].aId, fuq : resultObj.slice(1) } })
+            .then(_ => handleNav(1))
+    }
 
     return (
         <div className={style.shut}>
@@ -64,6 +70,8 @@ function Match() {
                                     id={id}
                                     isFuq={fuq}
                                     isLast={i === arr.length - 1}
+                                    resultObj={resultObj}
+                                    setResultObj={setResultObj}
                                 />
                             ))}
                     </>
@@ -83,7 +91,7 @@ function Match() {
             )}
             {fuq &&<div style={{marginBottom:'80px'}}/>}
             <div className={style.menu}>
-                {fuq && <button className={style.saveAllFuq}>שמירה</button>}
+                {fuq && resultObj.length == splitBySender(data).length && <button className={style.saveAllFuq} onClick={handleSaveQA}>שמירה</button>}
                 <div className={style.nav}>
                     <button className={style.move_button} onClick={() => handleNav(0)}>
                         <IoIosArrowForward />

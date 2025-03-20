@@ -8,7 +8,7 @@ import { api } from '../../helpers/api';
 import style from './style.module.css';
 import useApi from '../../helpers/useApi';
 
-function AnswerBlock({ content, _id, setActive, active, handleNav, setAnswers }) {
+function AnswerBlock({ content, _id, setActive, active, handleNav, setAnswers, isFuq }) {
     const { id } = useParams();
     const { post, put, del } = useApi();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,9 +52,9 @@ function AnswerBlock({ content, _id, setActive, active, handleNav, setAnswers })
                         <button className={style.cancel} onClick={() => setActive(null)}>
                             <IoIosCloseCircle />
                         </button>
-                        <button className={style.ok} onClick={handleSaveQA}>
+                        {!isFuq ? <button className={style.ok} onClick={handleSaveQA}>
                             <ImCheckmark />
-                        </button>
+                        </button> : ''}
                     </>
                 ) : (
                     isEditMode ? (

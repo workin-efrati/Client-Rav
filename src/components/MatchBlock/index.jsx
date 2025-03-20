@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import style from './style.module.css'
 import { api } from '../../helpers/api'
 import { MdSave } from 'react-icons/md'
@@ -7,7 +7,7 @@ import AnswerBlock from '../AnswerBlock';
 import useApi from '../../helpers/useApi'
 import dates from '../../helpers/dates'
 
-function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast }) {
+function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj, setResultObj }) {
 
 
     const [isEditMode, setIsEditMode] = useState(false)
@@ -34,6 +34,18 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast }) {
             })
     }
 
+    useEffect(() => {
+        if (active) {
+            const obj = resultObj.find(o => o.qId == data[0]._id)
+            if (obj) {
+                setResultObj([...resultObj, { ...obj, aId: active }])
+            }
+            else
+                setResultObj([...resultObj, { qId: data[0]._id, aId: active }])
+        }
+
+    }, [active]);
+
     console.log(data);
 
     return <div className={style.one}>
@@ -54,7 +66,7 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast }) {
 
         <div className={style.answers}>
             {answersLocal.map(a =>
-                <AnswerBlock key={a._id} content={a.message} _id={a._id} setActive={setActive} active={active} handleNav={handleNav} setAnswers={setAnswersLocal} />
+                <AnswerBlock key={a._id} content={a.message} _id={a._id} setActive={setActive} active={active} handleNav={handleNav} setAnswers={setAnswersLocal} isFuq={isFuq} />
             )}
         </div>
         <div className={style.load}>
