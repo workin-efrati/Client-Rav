@@ -4,7 +4,6 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { IoMdClose, IoIosCloseCircle } from "react-icons/io";
 import { MdSave } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
-import { api } from '../../helpers/api';
 import style from './style.module.css';
 import useApi from '../../helpers/useApi';
 

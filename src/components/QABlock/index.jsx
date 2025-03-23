@@ -3,12 +3,11 @@ import style from './style.module.css'
 import { SlOptionsVertical } from 'react-icons/sl';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../../helpers/api';
 import { MdSave } from 'react-icons/md';
 
 function QABlock({ data, type, to }) {
     const { message, _id, isQuestion, date } = data
-
+    const { get } = useApi();
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isContentOpen, setIsContentOpen] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
@@ -18,11 +17,30 @@ function QABlock({ data, type, to }) {
         setIsEditMode(!isEditMode)
     }
 
-    const handleClickApi = (method, body) => {
-        api({ url: `msg/${_id}`, method, body })
+    const handleDel = () => {
+        put(`msg/${_id}`)
             .then((res) => setContent(res.message))
         setIsMenuOpen(!isMenuOpen)
     }
+    const handleEdit = (body) => {
+        put(`msg/${_id}`, { body })
+            .then((res) => setContent(res.message))
+        setIsMenuOpen(!isMenuOpen)
+    }
+
+    const handleGet = () => {
+        get(`msg/${_id}`)
+            .then((res) => setContent(res.message))
+        setIsMenuOpen(!isMenuOpen)
+    }
+
+    // const handleClickApi = (method, body) => {
+
+
+    //     api({ url: `msg/${_id}`, method, body })
+    //         .then((res) => setContent(res.message))
+    //     setIsMenuOpen(!isMenuOpen)
+    // }
 
     return <div className={content ? style.block : style.close}>
         {content?.length ?
@@ -35,16 +53,16 @@ function QABlock({ data, type, to }) {
                         <button className={isContentOpen ? style.content_open : style.content_close} onClick={() => setIsContentOpen(!isContentOpen)}>{content}</button>
                 }
                 {isEditMode ?
-                    <button onClick={() => { setIsEditMode(!isEditMode); handleClickApi('put', { message: content }) }}><MdSave /></button>
+                    <button onClick={() => { setIsEditMode(!isEditMode); handleEdit({ message: content }) }}><MdSave /></button>
                     :
                     <>
                         <button className={style.menu_symbol} onClick={() => setIsMenuOpen(!isMenuOpen)}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
                         <div className={`${style.menu} ${isMenuOpen ? style.open : style.close}`}>
-                            <button onClick={() => handleClickApi('put', { isQuestion: !isQuestion })}>{type === 'q' ? 'הגדר כתשובה' : 'הגדר כשאלה'}</button>
+                            <button onClick={() => handleEdit({ isQuestion: !isQuestion })}>{type === 'q' ? 'הגדר כתשובה' : 'הגדר כשאלה'}</button>
                             <button onClick={handleClick}>{type === 'q' ? 'ערוך שאלה' : 'ערוך תשובה'}</button>
-                            <button onClick={() => handleClickApi('delete')}>{type === 'q' ? 'מחק שאלה' : 'מחק תשובה'}</button>
-                            <button onClick={() => handleClickApi('put', { date: new Date(date).setDate(new Date(date).getDate() - 1) })}>העבר ליום הקודם</button>
-                            <button onClick={() => handleClickApi('put', { date: new Date(date).setDate(new Date(date).getDate() + 1) })}>העבר ליום הבא</button>
+                            <button onClick={handleDel}>{type === 'q' ? 'מחק שאלה' : 'מחק תשובה'}</button>
+                            <button onClick={() => handleEdit({ date: new Date(date).setDate(new Date(date).getDate() - 1) })}>העבר ליום הקודם</button>
+                            <button onClick={() => handleEdit({ date: new Date(date).setDate(new Date(date).getDate() + 1) })}>העבר ליום הבא</button>
                         </div>
                     </>}
             </>

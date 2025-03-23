@@ -29,9 +29,6 @@ function ShutBlock({ to }) {
             </div>
             {isEditModeQ ?
                 <textarea value={question} onChange={e => setQuestion(e.target.value)} />
-                // <textarea value={question} onChange={e =>
-                //     api({ url: `message/${id}`, method: 'put', params: { message: e.target.value } })
-                //         .then((res) => setQuestion(res))}/>
                 :
                 <p className={style.q_content} >{question}</p>}
         </div>
@@ -47,9 +44,6 @@ function ShutBlock({ to }) {
             </div>
             {isEditModeA ?
                 <textarea value={answer} onChange={e => setAnswer(e.target.value)} />
-                // <textarea value={answer} onChange={e =>
-                //     api({ url: `message/${id}`, method: 'put', params: { message: e.target.value } })
-                //         .then((res) => setAnswer(res))} />
                 :
                 <p className={style.q_content} >{answer}</p>}
         </div>

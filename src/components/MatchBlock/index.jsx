@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import style from './style.module.css'
-import { api } from '../../helpers/api'
 import { MdSave } from 'react-icons/md'
 import { SlPencil } from 'react-icons/sl'
 import AnswerBlock from '../AnswerBlock';
