@@ -25,6 +25,13 @@ function Match() {
 
     useEffect(() => {
         if (data && data.length > 0) {
+            let obj = { qId: data[0]._id, fuq: [] }
+            data.forEach((d,i) => {
+                if (d.isQuestion && i != 0) {
+                    obj.fuq.push({qId : d._id})
+                }
+            });
+            setResultObj(obj)
             setQuestion(data[0].message || '');
         }
     }, [data]);
@@ -41,7 +48,7 @@ function Match() {
     };
 
     const handleSaveQA = () => {
-        post(`msg`, { body: { qId: id, aId: resultObj[0].aId, fuq : resultObj.slice(1) } })
+        post(`msg`, { body: resultObj })
             .then(_ => handleNav(1))
     }
 
@@ -89,9 +96,9 @@ function Match() {
             ) : (
                 <div className={style.loading}>אין נתונים</div>
             )}
-            {fuq &&<div style={{marginBottom:'80px'}}/>}
+            {fuq && <div style={{ marginBottom: '80px' }} />}
             <div className={style.menu}>
-                {fuq && resultObj.length == splitBySender(data).length && <button className={style.saveAllFuq} onClick={handleSaveQA}>שמירה</button>}
+                {fuq && isChecked(resultObj) && <button className={style.saveAllFuq} onClick={handleSaveQA}>שמירה</button>}
                 <div className={style.nav}>
                     <button className={style.move_button} onClick={() => handleNav(0)}>
                         <IoIosArrowForward />
@@ -130,8 +137,8 @@ function splitBySender(arr) {
 function orderData(arr) {
     var helpArr = [];
     let question;
-    for(let a of arr){
-        if(!a.isQuestion){
+    for (let a of arr) {
+        if (!a.isQuestion) {
             helpArr.push(a)
         }
         else question = a
@@ -139,6 +146,11 @@ function orderData(arr) {
     helpArr.unshift(question)
     return helpArr
 }
+
+function isChecked(obj) {
+    return obj.aId && obj.fuq.every(f=>f.aId)
+}
+
 
 // function splitBySender(arr = []) {
 //     return arr.reduce((acc, msg) => {

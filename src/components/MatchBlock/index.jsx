@@ -11,7 +11,7 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj
 
 
     const [isEditMode, setIsEditMode] = useState(false)
-    const [active, setActive] = useState()
+    const [active, setActive] = useState({id:"",s:0})
     const [content, setContent] = useState(data[0].message)
     const [time, setTime] = useState(1)
     const [answersLocal, setAnswersLocal] = useState(data.slice(1))
@@ -35,13 +35,14 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj
     }
 
     useEffect(() => {
-        if (active) {
-            const obj = resultObj.find(o => o.qId == data[0]._id)
-            if (obj) {
-                setResultObj([...resultObj, { ...obj, aId: active }])
+        if (active.id && resultObj) {
+            const obj = { ...resultObj }
+            if (i == 0) obj.aId = active.s==1 ? active.id :  undefined 
+            else {
+                let f = obj.fuq.find(o => o.qId == data[0]._id)
+                f.aId = active.s==1 ?  active.id : undefined
             }
-            else
-                setResultObj([...resultObj, { qId: data[0]._id, aId: active }])
+            setResultObj(obj)
         }
 
     }, [active]);

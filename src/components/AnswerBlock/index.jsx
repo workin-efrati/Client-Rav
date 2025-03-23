@@ -37,19 +37,19 @@ function AnswerBlock({ content, _id, setActive, active, handleNav, setAnswers, i
             .then(_ => setAnswers(prev => prev.filter(p=>p._id != _id)))
         toggleEditMode();
     };
-
     return (
-        <div className={`${!ansValue ? style.delete : style.block} ${active === _id ? style.active : ''}`}>
+        <div className={`${!ansValue ? style.delete : style.block} ${active.s ==1 && active.id == _id? style.active : ''}`}>
             {isEditMode ? (
                 <textarea value={ansValue} onChange={e => setAnsValue(e.target.value)} />
             ) : (
-                <p onClick={() => setActive(_id)}>{ansValue}</p>
+                <p onClick={() => setActive({id:_id,s:1})}>{ansValue}</p>
             )}
 
             <div className={style.side}>
-                {active === _id ? (
+                {active.s ==1 && active.id == _id ? (
                     <>
-                        <button className={style.cancel} onClick={() => setActive(null)}>
+                        <button className={style.cancel} onClick={() => {console.log(_id);
+                         setActive({id:_id,s:0})}}>
                             <IoIosCloseCircle />
                         </button>
                         {!isFuq ? <button className={style.ok} onClick={handleSaveQA}>
