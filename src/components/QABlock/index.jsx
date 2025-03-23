@@ -4,6 +4,7 @@ import { SlOptionsVertical } from 'react-icons/sl';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MdSave } from 'react-icons/md';
+import useApi from '../../helpers/useApi';
 
 function QABlock({ data, type, to }) {
     const { message, _id, isQuestion, date } = data
