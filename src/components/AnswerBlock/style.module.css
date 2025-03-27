@@ -57,7 +57,7 @@
     border-radius: 10px;
     font-size: 13px;
     position: absolute;
-    bottom: -63px;
+    top: 30px;
     z-index: 1;
 }
 
@@ -112,5 +112,14 @@ textarea {
 }
 
 .side button {
-    font-size: 25px;
+    font-size: 17px;
+    padding-top: 10px;
+}
+
+.date {
+    direction: ltr;
+    font-size: 13px;
+    margin-top: -16px;
+    padding: 0px 0 10px 0;
+    font-weight: bold;
 }

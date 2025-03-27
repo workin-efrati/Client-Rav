@@ -3,6 +3,7 @@ import axios from "axios";
 
 // בסיס ה-API (קבוע)
 const BASE_URL = "https://server-rav.onrender.com/";
+// const BASE_URL = "http://localhost:2500/";
 
 const useApi = () => {
   const [loading, setLoading] = useState(false);
