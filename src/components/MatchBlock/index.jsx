@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import style from './style.module.css'
-import { MdSave } from 'react-icons/md'
-import { SlPencil, SlSettings,SlClose } from 'react-icons/sl'
+import { MdDelete, MdSave } from 'react-icons/md'
+import { SlPencil, SlSettings, SlClose, SlOptionsVertical } from 'react-icons/sl'
 import AnswerBlock from '../AnswerBlock';
 import useApi from '../../helpers/useApi'
 import dates from '../../helpers/dates'
+import { IoMdClose } from 'react-icons/io';
 
 function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj, setResultObj }) {
 
 
     const [isEditMode, setIsEditMode] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [active, setActive] = useState({ id: "", s: 0 })
     const [content, setContent] = useState(data[0].message)
     const [time, setTime] = useState(1)
     const [answersLocal, setAnswersLocal] = useState(data.slice(1))
     const textRef = useRef(null);
 
-    const { get, put } = useApi();
+    const { get, put, del } = useApi();
 
     const handleCancelFuq = () => {
         debugger
@@ -51,6 +53,12 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj
         e.target.style.height = e.target.scrollHeight + "px";
     }
 
+    const handleDelete = () => {
+        let ids = active.id ? [id, active.id] : [id];
+        del(`msg/${id}`, { body: { ids } }, { enableLogging: true })
+            .then(_ => i == 0 ? handleNav(1) : window.location.reload())
+    };
+
     useEffect(() => {
         if (active.id && resultObj) {
             const obj = { ...resultObj }
@@ -73,13 +81,27 @@ function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj
                 : <h3>שאלה</h3>}
             {isEditMode ?
                 <textarea value={content} onChange={e => setContent(e.target.value)} style={{ fontSize: fontSize }}
-                    onFocus={handleFocus}  ref={textRef}/>
+                    onFocus={handleFocus} ref={textRef} />
                 :
                 <p className={style.q_content} style={{ fontSize: fontSize }}>{content}</p>}
 
-            <button className={style.edit} onClick={handleClick}>{isEditMode ? <> שמור  <MdSave /> </>: <>עריכה <SlPencil /></>}</button>
-            {!isEditMode && <button className={style.edit} onClick={handleCancelFuq}> ביטול שאלת המשך <SlSettings /></button>}
-            {isEditMode && <button className={style.edit} onClick={()=> setIsEditMode(!isEditMode)}> סגור <SlClose /></button>}
+            <button className={style.menu_dots} onClick={() => setIsMenuOpen(!isMenuOpen)}>{!isEditMode ? isMenuOpen ? <IoMdClose /> : <SlOptionsVertical /> : ''}</button>
+            {isMenuOpen &&
+                <div className={style.menu}>
+                    {isEditMode ?
+                        <>
+                            <button className={style.edit} onClick={handleClick}>שמור  <MdSave /></button>
+                            <button className={style.edit} onClick={() => setIsEditMode(!isEditMode)}> סגור <SlClose /></button>
+                        </>
+                        :
+                        <>
+                            <button className={style.edit} onClick={handleClick}>עריכה <SlPencil /></button>
+                            <button className={style.edit} onClick={handleCancelFuq}> ביטול שאלת המשך <SlSettings /></button>
+                            <button className={style.edit} onClick={handleDelete}> מחק שאלה <MdDelete /></button>
+                            {active.id && <button className={style.edit} onClick={handleDelete}> מחק שאלה ותשובה <MdDelete /></button>}
+                        </>
+                    }
+                </div>}
             <div>{dates.formatDate(data[0]?.date)}</div>
         </div>
 

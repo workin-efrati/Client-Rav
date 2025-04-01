@@ -8,7 +8,7 @@ import useApi from '../../helpers/useApi';
 
 function QABlock({ data, type, to }) {
     const { message, _id, isQuestion, date } = data
-    const { get } = useApi();
+    const { get, put } = useApi();
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isContentOpen, setIsContentOpen] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)

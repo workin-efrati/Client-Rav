@@ -27,6 +27,17 @@ textarea {
     resize: none;
 }
 
+.menu_dots {
+    align-self: flex-end;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: baseline;
+}
+
 .line {
     height: 1px;
     background: linear-gradient(90deg, rgba(6, 119, 221, 0.8) 0%, rgba(4, 81, 151, 0.8) 43%, rgba(3, 64, 119, 0.8) 100%);

@@ -41,6 +41,8 @@ function Match() {
     const handleNav = (isNext) => {
         get(`msg/${id}/nav`, { params: { nav: isNext, enableLogging: true } })
             .then(res => {
+                console.log('res ', res);
+                
                 nav(`/${year}/${month}/${day}/${res}`)
                 clear()
                 window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -42,14 +42,14 @@ function AnswerBlock({ content, date, _id, setActive, active, handleNav, setAnsw
     }
 
     const handleDelete = () => {
-        del(`msg/${_id}`, { enableLogging: true })
+        del(`msg/${_id}`, { body: {ids: [_id]} }, { enableLogging: true })
             .then(_ => setAnswers(prev => prev.filter(p => p._id != _id)))
         toggleEditMode();
     };
 
     const handleFocus = (e) => {
-            e.target.style.height = "auto"; 
-            e.target.style.height = e.target.scrollHeight + "px";
+        e.target.style.height = "auto";
+        e.target.style.height = e.target.scrollHeight + "px";
     }
 
     const handleBlur = (event) => {
@@ -58,26 +58,26 @@ function AnswerBlock({ content, date, _id, setActive, active, handleNav, setAnsw
         }
         setIsMenuOpen(false);
 
-        if(false && isEditMode) toggleEditMode()
+        if (false && isEditMode) toggleEditMode()
     };
     return (
         <div className={`${!ansValue ? style.delete : style.block} ${active.s == 1 && active.id == _id ? style.active : ''}`}
-        onBlur={handleBlur}>
-            <div style={{width:'100%'}}>
-            {isEditMode ? (
-                <textarea 
-                ref={textRef} value={ansValue} onChange={e => setAnsValue(e.target.value)} 
-                onFocus={handleFocus}/>
-            ) : (
-                <>
-                    <p onClick={() => setActive({ id: _id, s: 1 })}>{ansValue}</p>
-                    <div className={style.date}>{dates.formatDate(date, true)}</div>
-                </>
-                    
-                )}
-                </div>
+            onBlur={handleBlur}>
+            <div style={{ width: '100%' }}>
+                {isEditMode ? (
+                    <textarea
+                        ref={textRef} value={ansValue} onChange={e => setAnsValue(e.target.value)}
+                        onFocus={handleFocus} />
+                ) : (
+                    <>
+                        <p onClick={() => setActive({ id: _id, s: 1 })}>{ansValue}</p>
+                        <div className={style.date}>{dates.formatDate(date, true)}</div>
+                    </>
 
-            <div className={style.side}  tabIndex={0}>
+                )}
+            </div>
+
+            <div className={style.side} tabIndex={0}>
                 {active.s == 1 && active.id == _id ? (
                     <>
                         <button className={style.cancel} onClick={() => {
@@ -92,18 +92,18 @@ function AnswerBlock({ content, date, _id, setActive, active, handleNav, setAnsw
                     </>
                 ) : (
                     isEditMode ? (
-                        <button  tabIndex={1} onMouseDown={(e) => e.preventDefault()} onClick={handleSave}><MdSave /></button>
+                        <button tabIndex={1} onMouseDown={(e) => e.preventDefault()} onClick={handleSave}><MdSave /></button>
                     ) : (
                         // <div tabIndex={0}>
                         <>
-                                <button onClick={toggleMenu}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
-                                {isMenuOpen && (
-                                    <div ref={menuRef}  className={style.menu}>
-                                        <button onClick={toggleEditMode}>ערוך תשובה</button>
-                                        <button onClick={handleDelete}>מחק תשובה</button>
-                                    </div>
-                                )}
-                                </>
+                            <button onClick={toggleMenu}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
+                            {isMenuOpen && (
+                                <div ref={menuRef} className={style.menu}>
+                                    <button onClick={toggleEditMode}>ערוך תשובה</button>
+                                    <button onClick={handleDelete}>מחק תשובה</button>
+                                </div>
+                            )}
+                        </>
 
                         // </div>
                     )
