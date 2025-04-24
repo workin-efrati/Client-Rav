@@ -10,4 +10,9 @@ function formatDate(isoString, onlyTime = false) {
     return `${day}-${month}-${year}  ${hours}:${minutes}`;
 }
 
-export default { formatDate }
+function getLastDayOfMonth(year, month) {
+    const nextMonth = new Date(year, Number(month), 1);
+    nextMonth.setDate(nextMonth.getDate() - 1);
+    return nextMonth.getDate();
+  }
+export default { formatDate , getLastDayOfMonth}

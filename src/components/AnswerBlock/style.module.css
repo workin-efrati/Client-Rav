@@ -30,8 +30,8 @@
 }
 
 .block button {
-    font-size: 16px;
-    padding: 2px 5px;
+    font-size: 30px;
+    padding: 2px 12px;
 }
 
 .green {
@@ -97,6 +97,7 @@ textarea {
 .side .cancel {
     font-size: 30px;
     height: 30px;
+    padding: 0;
 }
 
 .side .ok {
@@ -104,7 +105,8 @@ textarea {
     height: 40px;
     border-radius: 5px;
     background-color: #314F71;
-    font-size: 30px;
+    font-size: 20px;
+
 }
 
 .side .ok path {
@@ -112,7 +114,7 @@ textarea {
 }
 
 .side button {
-    font-size: 17px;
+    font-size: 20px;
     padding-top: 10px;
 }
 
@@ -120,6 +122,6 @@ textarea {
     direction: ltr;
     font-size: 13px;
     margin-top: -16px;
-    padding: 0px 0 10px 0;
+    padding: 10px 0 10px 15px;
     font-weight: bold;
 }

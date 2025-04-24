@@ -1,0 +1,78 @@
+.wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .toggleButton {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  
+  .menu {
+    position: absolute;
+    background-color: #dcdcdc;
+    box-shadow: 0px 2px 10px 0px #00000040;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    min-width: 140px;
+    z-index: 1000;
+    padding: 5px;
+  }
+  /* .menu {
+    position: absolute;
+    top: 20%;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    gap: 0.25rem;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: #dcdcdc;
+    box-shadow: 0px 2px 10px 0px #00000040;
+    border-radius: 10px;
+    font-size: 13px;
+    z-index: 1;
+
+} */
+
+  .item {
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    text-align: right;
+    width: 100%;
+    cursor: pointer;
+  }
+  
+  .item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .bottom-right {
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+  }
+  
+  .bottom-left {
+    top: 100%;
+    left: 0;
+    /* margin-top: 1px; */
+  }
+  
+  .top-right {
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 4px;
+  }
+  
+  .top-left {
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 4px;
+  }
+  

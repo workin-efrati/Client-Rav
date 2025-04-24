@@ -1,74 +1,81 @@
-import { IoMdClose } from 'react-icons/io';
-import style from './style.module.css'
-import { SlOptionsVertical } from 'react-icons/sl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import style from './style.module.css';
+import { SlOptionsVertical } from 'react-icons/sl';
+import { IoMdClose } from 'react-icons/io';
 import { MdSave } from 'react-icons/md';
-import useApi from '../../helpers/useApi';
+import useApi from '../../hooks/useApi';
+import ActionMenu from '../ActionMenu';
+import EditableTextarea from '../EditableTextarea';
 
 function QABlock({ data, type, to }) {
-    const { message, _id, isQuestion, date } = data
-    const { get } = useApi();
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isContentOpen, setIsContentOpen] = useState(false)
-    const [isEditMode, setIsEditMode] = useState(false)
-    const [content, setContent] = useState(message)
+  const { message, _id, isQuestion, date } = data;
+  const { put, get, del } = useApi();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [content, setContent] = useState(message);
+  const [isContentOpen, setIsContentOpen] = useState(false);
 
-    const handleClick = () => {
-        setIsEditMode(!isEditMode)
-    }
+  const toggleEdit = () => setIsEditMode(prev => !prev);
 
-    const handleDel = () => {
-        put(`msg/${_id}`)
-            .then((res) => setContent(res.message))
-        setIsMenuOpen(!isMenuOpen)
-    }
-    const handleEdit = (body) => {
-        put(`msg/${_id}`, { body })
-            .then((res) => setContent(res.message))
-        setIsMenuOpen(!isMenuOpen)
-    }
+  const handleSave = async () => {
+    const res = await put(`msg/${_id}`, { body: { message: content } });
+    setContent(res.message);
+    setIsEditMode(false);
+  };
 
-    const handleGet = () => {
-        get(`msg/${_id}`)
-            .then((res) => setContent(res.message))
-        setIsMenuOpen(!isMenuOpen)
-    }
+  const handleToggleType = () => {
+    put(`msg/${_id}`, { body: { isQuestion: !isQuestion } })
+      .then(res => setContent(res.message));
+  };
 
-    // const handleClickApi = (method, body) => {
+  const handleDelete = async () => {
+    await del('msg', { body: [_id]  });
+  };
 
+  const handleShiftDate = (offset) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + offset);
+    put(`msg/${_id}`, { body: { date: newDate } })
+      .then(res => setContent(res.message));
+  };
 
-    //     api({ url: `msg/${_id}`, method, body })
-    //         .then((res) => setContent(res.message))
-    //     setIsMenuOpen(!isMenuOpen)
-    // }
+  return (
+    <div className={content ? style.block : style.close}>
+      {isEditMode ? (
+        <EditableTextarea
+          value={content}
+          onChange={setContent}
+          onSave={handleSave}
+          onCancel={toggleEdit}
+        />
+      ) : type === 'q' ? (
+        <Link to={to}><p>{content}</p></Link>
+      ) : (
+        <button
+          className={isContentOpen ? style.content_open : style.content_close}
+          onClick={() => setIsContentOpen(prev => !prev)}
+        >
+          {content}
+        </button>
+      )}
 
-    return <div className={content ? style.block : style.close}>
-        {content?.length ?
-            <>
-                {isEditMode ?
-                    <textarea value={content} onChange={e => setContent(e.target.value)} />
-                    : type === 'q' ?
-                        <Link to={to}>{content}</Link>
-                        :
-                        <button className={isContentOpen ? style.content_open : style.content_close} onClick={() => setIsContentOpen(!isContentOpen)}>{content}</button>
-                }
-                {isEditMode ?
-                    <button onClick={() => { setIsEditMode(!isEditMode); handleEdit({ message: content }) }}><MdSave /></button>
-                    :
-                    <>
-                        <button className={style.menu_symbol} onClick={() => setIsMenuOpen(!isMenuOpen)}>{isMenuOpen ? <IoMdClose /> : <SlOptionsVertical />}</button>
-                        <div className={`${style.menu} ${isMenuOpen ? style.open : style.close}`}>
-                            <button onClick={() => handleEdit({ isQuestion: !isQuestion })}>{type === 'q' ? 'הגדר כתשובה' : 'הגדר כשאלה'}</button>
-                            <button onClick={handleClick}>{type === 'q' ? 'ערוך שאלה' : 'ערוך תשובה'}</button>
-                            <button onClick={handleDel}>{type === 'q' ? 'מחק שאלה' : 'מחק תשובה'}</button>
-                            <button onClick={() => handleEdit({ date: new Date(date).setDate(new Date(date).getDate() - 1) })}>העבר ליום הקודם</button>
-                            <button onClick={() => handleEdit({ date: new Date(date).setDate(new Date(date).getDate() + 1) })}>העבר ליום הבא</button>
-                        </div>
-                    </>}
-            </>
-            : <></>}
+      {!isEditMode && content && (
+        <ActionMenu
+          icon={<SlOptionsVertical />}
+          openIcon={<IoMdClose />}
+          direction="bottom-left"
+          options={[
+            { label: type === 'q' ? 'הגדר כתשובה' : 'הגדר כשאלה', onClick: handleToggleType },
+            { label: type === 'q' ? 'ערוך שאלה' : 'ערוך תשובה', onClick: toggleEdit },
+            { label: type === 'q' ? 'מחק שאלה' : 'מחק תשובה', onClick: handleDelete },
+            { label: 'העבר ליום הקודם', onClick: () => handleShiftDate(-1) },
+            { label: 'העבר ליום הבא', onClick: () => handleShiftDate(1) },
+          ]}
+          style={{item:{'fontSize': '20px'}, menu:{'minWidth': '180px'}}}
+        />
+      )}
     </div>
+  );
 }
 
-export default QABlock
+export default QABlock;

@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import Move from '../../components/Move'
 import style from './style.module.css'
-import useApi from '../../helpers/useApi';
+import useApi from '../../hooks/useApi';
 import QABlock from '../../components/QABlock';
 import { useEffect, useMemo } from 'react';
 

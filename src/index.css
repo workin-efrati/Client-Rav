@@ -18,3 +18,8 @@
   --heebo-font: "Heebo", sans-serif;
   --blinker-font: "Blinker", sans-serif;
 }
+
+p {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

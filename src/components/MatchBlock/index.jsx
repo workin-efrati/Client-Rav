@@ -1,100 +1,129 @@
-import { useEffect, useRef, useState } from 'react'
-import style from './style.module.css'
-import { MdSave } from 'react-icons/md'
-import { SlPencil, SlSettings,SlClose } from 'react-icons/sl'
+import { useEffect, useRef, useState } from 'react';
+import style from './style.module.css';
 import AnswerBlock from '../AnswerBlock';
-import useApi from '../../helpers/useApi'
-import dates from '../../helpers/dates'
+import useApi from '../../hooks/useApi';
+import dates from '../../helpers/dates';
+import { IoMdClose } from 'react-icons/io';
+import ActionMenu from '../ActionMenu';
+import EditableTextarea from '../EditableTextarea';
+import { SlOptionsVertical } from 'react-icons/sl';
 
-function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj, setResultObj }) {
+function MatchBlock({ i, data, fontSize, id, isFuq, handleNav, isLast, resultObj, setResultObj,handleMoveQuestion,handleMoveAnswer }) {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [active, setActive] = useState({ id: '', s: 0 });
+  const [content, setContent] = useState(data[0].message);
+  const [time, setTime] = useState(1);
+  const [answersLocal, setAnswersLocal] = useState(data.slice(1));
+  const divRef = useRef();
+  const { get, put, del } = useApi();
 
+  const height = divRef.current?.offsetHeight;
 
-    const [isEditMode, setIsEditMode] = useState(false)
-    const [active, setActive] = useState({ id: "", s: 0 })
-    const [content, setContent] = useState(data[0].message)
-    const [time, setTime] = useState(1)
-    const [answersLocal, setAnswersLocal] = useState(data.slice(1))
-    const textRef = useRef(null);
+  const toggleEditMode = () => setIsEditMode(prev => !prev);
 
-    const { get, put } = useApi();
+  const handleCancelFuq = () => {
+    const sender = `${data[0].sender}_${new Date().getHours()}${new Date().getMinutes()}`;
+    put(`msg/${data[0]._id}`, { body: { sender, isFuq: false }, enableLogging: true })
+      .then(() => window.location.reload());
+  };
 
-    const handleCancelFuq = () => {
-        debugger
-        let sender = data[0].sender + "_" + new Date().getHours() + new Date().getMinutes()
-        put(`msg/${data[0]._id}`, { body: { sender, isFuq: false }, enableLogging: true })
-            .then(_ => window.location.reload())
+  const handleSave = () => {
+    put(`msg/${id}`, { body: { message: content }, enableLogging: true })
+      .then(res => setContent(res.message));
+    setIsEditMode(false);
+  };
+
+  const handleDelete = () => {
+    const ids = active.id && active.s === 1 ? [id, active.id] : [id];
+    del(`msg`, { body:  ids  }, { enableLogging: true })
+      .then(() => (i === 0 ? handleNav(1) : window.location.reload()));
+    setIsEditMode(false);
+  };
+
+  const handleShowMore = () => {
+    get(`msg/${id}`, { params: { time: time + 1, isQuestion : false }, enableLogging: true })
+      .then(res => {
+        setAnswersLocal(res.slice(1));
+        setTime(prev => prev + 1);
+      });
+  };
+
+  useEffect(() => {
+    if (active.id && resultObj) {
+      const obj = { ...resultObj };
+      if (i === 0) obj.aId = active.s === 1 ? active.id : undefined;
+      else {
+        const f = obj.fuq.find(o => o.qId === data[0]._id);
+        if (f) f.aId = active.s === 1 ? active.id : undefined;
+      }
+      setResultObj(obj);
     }
+  }, [active]);
 
-    useEffect(() => {
-        if (isEditMode && textRef.current) {
-            textRef.current.focus();
-        }
-    }, [isEditMode]);
+  return (
+    <div className={style.one}>
+      <div className={style.title}>
+        <h3>
+          {isFuq ? (i === 0 ? 'שאלה ראשית' : `שאלת המשך (${i})`) : 'שאלה'}
+        </h3>
 
-    const handleClick = () => {
-        if (isEditMode) {
-            put(`msg/${id}`, { body: { message: content }, enableLogging: true })
-                .then((res) => setContent(res.message))
-        }
-        setIsEditMode(!isEditMode)
-    }
+        {isEditMode ? (
+          <EditableTextarea
+            value={content}
+            onChange={setContent}
+            onSave={handleSave}
+            onCancel={toggleEditMode}
+            height={height}
+          />
+        ) : (
+          <p className={style.q_content} style={{ fontSize }} ref={divRef}>{content}</p>
+        )}
 
-    const handleShowMore = () => {
-        get(`msg/${id}`, { params: { time: time + 1 }, enableLogging: true })
-            .then((res) => {
-                setAnswersLocal(res.slice(1))
-                setTime(time + 1)
-            })
-    }
-    const handleFocus = (e) => {
-        e.target.style.height = "auto";
-        e.target.style.height = e.target.scrollHeight + "px";
-    }
+        {!isEditMode && (
+          <ActionMenu
+            icon={<SlOptionsVertical />}
+            openIcon={<IoMdClose />}
+            direction="bottom-left"
+            style={{wrapper:{direction: 'ltr'}}}
+            options={[
+              { label: 'עריכה', onClick: toggleEditMode },
+              { label: 'ביטול שאלת המשך', onClick: handleCancelFuq, condition: isFuq },
+              { label: 'מחק שאלה בלבד', onClick: handleDelete },
+              { label: 'מחק שאלה ותשובה', onClick: handleDelete, condition: active.s === 1 },
+              { label: 'העבר למעלה', onClick: ()=>handleMoveQuestion(data[0]._id,1) },
+              { label: 'העבר למטה', onClick: ()=>handleMoveQuestion(data[0]._id,0) },
+            ]}
+          />
+        )}
 
-    useEffect(() => {
-        if (active.id && resultObj) {
-            const obj = { ...resultObj }
-            if (i == 0) obj.aId = active.s == 1 ? active.id : undefined
-            else {
-                let f = obj.fuq.find(o => o.qId == data[0]._id)
-                f.aId = active.s == 1 ? active.id : undefined
-            }
-            setResultObj(obj)
-        }
+        <div>{dates.formatDate(data[0]?.date)}</div>
+      </div>
 
-    }, [active]);
+      {!isFuq || (isFuq && i === 0) ? <div className={style.line}></div> : null}
 
-    console.log(data);
+      <div className={style.answers}>
+        {answersLocal.map(a => (
+          <AnswerBlock
+            key={a._id}
+            content={a.message}
+            date={a.date}
+            _id={a._id}
+            setActive={setActive}
+            active={active}
+            handleNav={handleNav}
+            setAnswers={setAnswersLocal}
+            isFuq={isFuq}
+            handleMoveAnswer={handleMoveAnswer}
+          />
+        ))}
+      </div>
 
-    return <div className={style.one}>
-        <div className={style.title}>
-            {isFuq ?
-                i == 0 ? <h3>שאלה ראשית</h3> : <h3>{`שאלת המשך (${i})`}</h3>
-                : <h3>שאלה</h3>}
-            {isEditMode ?
-                <textarea value={content} onChange={e => setContent(e.target.value)} style={{ fontSize: fontSize }}
-                    onFocus={handleFocus}  ref={textRef}/>
-                :
-                <p className={style.q_content} style={{ fontSize: fontSize }}>{content}</p>}
-
-            <button className={style.edit} onClick={handleClick}>{isEditMode ? <> שמור  <MdSave /> </>: <>עריכה <SlPencil /></>}</button>
-            {!isEditMode && <button className={style.edit} onClick={handleCancelFuq}> ביטול שאלת המשך <SlSettings /></button>}
-            {isEditMode && <button className={style.edit} onClick={()=> setIsEditMode(!isEditMode)}> סגור <SlClose /></button>}
-            <div>{dates.formatDate(data[0]?.date)}</div>
-        </div>
-
-        {!isFuq || (isFuq && i == 0) ? <div className={style.line}></div> : ''}
-
-        <div className={style.answers}>
-            {answersLocal.map(a =>
-                <AnswerBlock key={a._id} content={a.message} date={a.date} _id={a._id} setActive={setActive} active={active} handleNav={handleNav} setAnswers={setAnswersLocal} isFuq={isFuq} />
-            )}
-        </div>
-        <div className={style.load}>
-            <div className={style.line} />
-            {isLast ? <button onClick={handleShowMore}>טען עוד</button> : ''}
-        </div>
+      <div className={style.load}>
+        <div className={style.line} />
+        {isLast && <button onClick={handleShowMore}>טען עוד</button>}
+      </div>
     </div>
+  );
 }
 
-export default MatchBlock
+export default MatchBlock;
