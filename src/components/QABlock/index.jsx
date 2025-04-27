@@ -30,6 +30,7 @@ function QABlock({ data, type, to }) {
 
   const handleDelete = async () => {
     await del('msg', { body: [_id]  });
+    window.location.reload()
   };
 
   const handleShiftDate = (offset) => {
