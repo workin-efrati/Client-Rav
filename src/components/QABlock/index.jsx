@@ -25,7 +25,7 @@ function QABlock({ data, type, to }) {
 
   const handleToggleType = () => {
     put(`msg/${_id}`, { body: { isQuestion: !isQuestion } })
-      .then(res => setContent(res.message));
+      .then(_ => window.location.reload());
   };
 
   const handleDelete = async () => {
