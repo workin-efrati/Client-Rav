@@ -29,7 +29,7 @@ function Move({ date }) {
     }
 
     return <div className={style.move}>
-        {(month || year != 2024) && (day || month != 12) && day != 31 ? <Link key={'next'} to={nextPath}><IoIosArrowForward /></Link> : <div className={style.remove}></div>}
+        {(month || year != 2025) && (day || month != 12) && day != 31 ? <Link key={'next'} to={nextPath}><IoIosArrowForward /></Link> : <div className={style.remove}></div>}
         <Link className={style.back} key={date} to={back}>{date}</Link>
         {(month || year != 2020) && (day || month != 1) && day != 1 ? <Link key={'prev'} to={prevPath}><IoIosArrowBack /></Link> : <div className={style.remove}></div>}
     </div>

@@ -4,7 +4,7 @@ import style from './style.module.css'
 function Years() {
 
   // 5.20-7.24
-  let years = ['2020', '2021', '2022', '2023', '2024'];
+  let years = ['2020', '2021', '2022', '2023', '2024', '2025'];
 
 
   return <div className={style.years}>
