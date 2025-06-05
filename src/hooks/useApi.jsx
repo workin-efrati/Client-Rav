@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
 
 // בסיס ה-API (קבוע)
-const BASE_URL = "https://server-rav.onrender.com/";
-// const BASE_URL = "http://localhost:2500/";
+// const BASE_URL = "https://server-rav.onrender.com/";
+const BASE_URL = serverUrl;
 
 const useApi = () => {
   const [loading, setLoading] = useState(false);

@@ -28,7 +28,7 @@ function Months() {
       .map((m, i) => data[i])
       .filter((entry) => entry && entry.total !== 0)
       .map((entry, index) => (
-        <DateBlock key={index} date={months[index]} part={entry.part} total={entry.total} to={`/${year}/${index + 1}`} />
+         <DateBlock key={entry.index} date={months[entry.index]} part={entry.part} total={entry.total} to={`/${year}/${entry.index + 1}`} /> 
       ))
       .sort((a, b) => {
         let big = a.props,

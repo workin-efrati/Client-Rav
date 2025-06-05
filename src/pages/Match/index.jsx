@@ -231,7 +231,7 @@ function orderData(arr) {
 }
 
 function isChecked(obj) {
-    return obj.aId && obj.fuq.every(f => f.aId)
+    return obj.aId || obj.fuq?.some(f => f.aId)
 }
 
 
