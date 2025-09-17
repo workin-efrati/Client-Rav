@@ -12,6 +12,7 @@
   font-family: "Heebo", sans-serif;
   font-optical-sizing: auto;
   direction: rtl;
+  background-color: #E2E2E2CC;
 }
 
 :root {
@@ -22,4 +23,12 @@
 p {
   word-break: break-word;
   overflow-wrap: break-word;
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  position: relative;
 }

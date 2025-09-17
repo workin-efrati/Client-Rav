@@ -11,7 +11,7 @@
     display: flex;
     gap: 0.5rem;
     justify-content: end;
-    position: absolute;
+    /* position: absolute; */
     left: 30px;
 }
 
@@ -52,12 +52,21 @@
 
     position: fixed;
     bottom: 0;
-    left: 0;
+    /* left: 0; */
     background-color: #e2e2e2d9;
     text-align: center;
     padding: 15px;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    /* position: absolute; */
+    left: 50%;
+    transform: translateX(-50%);
 }
+
+/* @media (max-width: 576px) {
+    .menu {
+        left: 0;
+    }
+} */
 
 .menu a {
     text-decoration: none;
@@ -82,7 +91,8 @@
     width: 150px;
     padding: 5px;
 }
-.menu .move_button div{
+
+.menu .move_button div {
     font-size: 14px;
 }
 
